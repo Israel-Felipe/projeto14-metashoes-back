@@ -28,16 +28,28 @@ async function addToCar(req, res) {
       res.status(400).send({ message: "Token de acesso não enviado" });
       return;
     }
-    const userMarket = await db.collection(`${COLLECTIONS.USERS}`).findOne({
-      _id: ObjectId(activeSession.userId),
+
+    const userMarket = await db.collection(`${COLLECTIONS.MARKET}`).findOne({
+      userId: activeSession.userId,
     });
+    console.log(userMarket);
+    if (!userMarket) {
+      await db.collection(`${COLLECTIONS.MARKET}`).insertOne({
+        userId: `${activeSession.userId}`,
+        market: [],
+      });
+      await db.collection(`${COLLECTIONS.MARKET}`).updateOne(
+        { userId: `${activeSession.userId}` }, //activeSession.userId
+        { $push: { market: { idProduct, name, size, color, quantity } } }
+      );
+    } else {
+      await db.collection(`${COLLECTIONS.MARKET}`).updateOne(
+        { userId: `${activeSession.userId}` }, //activeSession.userId
+        { $push: { market: { idProduct, name, size, color, quantity } } }
+      );
+    }
 
     //fazer uma verificação pra ver se tem carrinho. (NÃO SEI SE CRIA NO LOGIN OU AQUI)
-
-    await db.collection(`${COLLECTIONS.USERS}`).updateOne(
-      { _id: ObjectId("6323afbfa96506291a990895") }, //activeSession.userId
-      { $push: { market: { idProduct, name, size, color, quantity } } }
-    );
 
     res.status(201).send({ message: "Item adicionado ao carrinho" });
   } catch (error) {
@@ -67,27 +79,30 @@ async function removeFromCar(req, res) {
       res.status(400).send({ message: "Token de acesso não enviado" });
       return;
     }
-    const userMarket = await db.collection(`${COLLECTIONS.USERS}`).findOne({
-      _id: ObjectId("6323afbfa96506291a990895"),
+    const userMarket = await db.collection(`${COLLECTIONS.MARKET}`).findOne({
+      userId: activeSession.userId,
     });
 
-    //fazer uma verificação pra ver se tem carrinho. (NÃO SEI SE CRIA NO LOGIN OU AQUI)
-    console.log(userMarket);
-    let response = await db.collection(`${COLLECTIONS.USERS}`).updateMany(
-      { _id: ObjectId("6323afbfa96506291a990895") }, //activeSession.userId
-      { $pull: { market: { idProduct: idProduct } } }
-    );
-    console.log(response);
-    if (response.modifiedCount === 0) {
+    if (!userMarket) {
       res
         .status(404)
-        .send({
+        .send({ message: "Não foi possível encontrar o seu carrinho" });
+      return;
+    } else {
+      let response = await db.collection(`${COLLECTIONS.MARKET}`).updateMany(
+        { userId: `${activeSession.userId}` }, //activeSession.userId
+        { $pull: { market: { idProduct: idProduct } } }
+      );
+
+      if (response.modifiedCount === 0) {
+        res.status(404).send({
           message: "Não foi possível remover esse item do seu carrinho",
         });
-      return;
-    }
+        return;
+      }
 
-    res.status(201).send({ message: "Item removido do carrinho" });
+      res.status(201).send({ message: "Item removido do carrinho" });
+    }
   } catch (error) {
     res
       .status(500)
