@@ -1,6 +1,6 @@
 import express from "express";
 
-import { signUp } from "../controllers/user.controller.js";
+import { signUp, signIn } from "../controllers/user.controller.js";
 import {
   getProduct,
   addToCar,
@@ -16,5 +16,6 @@ router.post("/produto", addToCar);
 router.delete("/produto/:idProduct", removeFromCar);
 
 router.post("/signUp", signUp);
+router.post("/signIn", signIn);
 
 export default router;
