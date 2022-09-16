@@ -5,6 +5,21 @@ import { COLLECTIONS } from "../enums/collections.js";
 
 import { productSchema } from "../schemas/productSchema.js";
 
+async function getAllProducts(req, res) {
+  try {
+    let response = await db
+      .collection(`${COLLECTIONS.PRODUCTS}`)
+      .find()
+      .toArray();
+
+    res.send(response);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "Erro no servidor, tente novamente mais tarde" });
+  }
+}
+
 async function addToCar(req, res) {
   const token = req.headers.authorization?.replace("Bearer ", "");
 
@@ -129,7 +144,23 @@ async function getProduct(req, res) {
     return;
   }
 
-  res.status(200).send(ID_PRODUTO);
+  try {
+    let response = await db.collection(`${COLLECTIONS.PRODUCTS}`).findOne({
+      _id: ObjectId(ID_PRODUTO),
+    });
+
+    if (!response) {
+      res.status(404).send({ message: "Não foi possível achar esse tênis" });
+      return;
+    }
+
+    res.status(200).send(response);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "Erro no servidor, ou no formato do ID enviado" });
+    return;
+  }
 }
 
-export { addToCar, getProduct, removeFromCar };
+export { addToCar, getProduct, removeFromCar, getAllProducts };
