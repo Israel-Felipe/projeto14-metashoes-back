@@ -30,7 +30,7 @@ async function signUp(req, res) {
     return res.sendStatus(STATUS_CODE.CREATED);
   } catch (error) {
     console.error(error);
-    return res.send(STATUS_CODE.SERVER_ERROR);
+    return res.send(STATUS_CODE.SERVER_ERROR); /* dasd */
   }
 }
 
