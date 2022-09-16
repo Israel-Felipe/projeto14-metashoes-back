@@ -10,6 +10,11 @@ app.use(express.json());
 
 app.use(userRouter);
 
+app.get("/", (req, res) => {
+  const testeHeroku = "vai heroku!";
+  res.send(testeHeroku);
+});
+
 app.listen(process.env.PORT, () => {
   console.log("Server running on port " + process.env.PORT);
 });
