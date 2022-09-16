@@ -9,4 +9,4 @@ app.use(express.json());
 
 app.use(userRouter);
 
-app.listen(5000, () => console.log("Listen server on port 5000"));
+app.listen(process.env.PORT, () => console.log(`Listen server on port ${process.env.PORT}`));
