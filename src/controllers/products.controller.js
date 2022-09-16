@@ -7,6 +7,12 @@ import { productSchema } from "../schemas/productSchema.js";
 
 async function addToCar(req, res) {
   const token = req.headers.authorization?.replace("Bearer ", "");
+
+  if (!token) {
+    res.status(400).send({ message: "Token de acesso não enviado" });
+    return;
+  }
+
   const validation = productSchema.validate(req.body, { abortEarly: false });
 
   const { idProduct, name, size, color, quantity } = req.body;
@@ -25,7 +31,7 @@ async function addToCar(req, res) {
       });
 
     if (!activeSession) {
-      res.status(400).send({ message: "Token de acesso não enviado" });
+      res.status(400).send({ message: "Perfil não encontrado" });
       return;
     }
 
@@ -62,6 +68,11 @@ async function addToCar(req, res) {
 async function removeFromCar(req, res) {
   const token = req.headers.authorization?.replace("Bearer ", "");
 
+  if (!token) {
+    res.status(400).send({ message: "Token de acesso não enviado" });
+    return;
+  }
+
   const { idProduct } = req.params;
 
   if (!idProduct) {
@@ -76,7 +87,7 @@ async function removeFromCar(req, res) {
       });
 
     if (!activeSession) {
-      res.status(400).send({ message: "Token de acesso não enviado" });
+      res.status(400).send({ message: "Perfil não encontrado" });
       return;
     }
     const userMarket = await db.collection(`${COLLECTIONS.MARKET}`).findOne({
