@@ -4,6 +4,7 @@ const STATUS_CODE = Object.freeze({
   BAD_REQUEST: 400,
   NOT_FOUND: 404,
   UNAUTHORIZED: 401,
+  CONFLIT: 409,
   SERVER_ERROR: 500,
 });
 
