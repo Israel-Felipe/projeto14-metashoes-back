@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
 import db from "../database/db.js";
+import { v4 as uuid } from "uuid";
 import { STATUS_CODE } from "../enums/statusCode.js";
 import { COLLECTIONS } from "../enums/collections.js";
-import { signUpSchema } from "../schemas/signSchema.js";
+import { signUpSchema, signInSchema } from "../schemas/signSchema.js";
 
 async function signUp(req, res) {
   const { name, email, password } = req.body;
@@ -34,4 +35,45 @@ async function signUp(req, res) {
   }
 }
 
-export { signUp };
+async function signIn(req, res) {
+  const { email, password } = req.body;
+
+  const isValid = signInSchema.validate({
+    email,
+    password,
+  });
+
+  if (isValid.error) {
+    return res.send(STATUS_CODE.BAD_REQUEST);
+  }
+  try {
+    const user = await db.collection(COLLECTIONS.USERS).findOne({
+      email,
+    });
+
+    const isValidPass = bcrypt.compareSync(password, user.password);
+
+    if (!user || !isValidPass) {
+      return res
+        .status(STATUS_CODE.UNAUTHORIZED)
+        .send({ message: "email ou senha incorretos" });
+    }
+
+    const token = uuid();
+    db.collection(COLLECTIONS.SESSIONS).insertOne({
+      userId: user._id,
+      token,
+    });
+
+    delete user.password;
+
+    console.log(user);
+
+    return res.send(token);
+  } catch (error) {
+    console.log(error);
+    return res.send(STATUS_CODE.SERVER_ERROR);
+  }
+}
+
+export { signUp, signIn };
