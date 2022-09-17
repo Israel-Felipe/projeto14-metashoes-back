@@ -50,6 +50,19 @@ async function addToCar(req, res) {
     const name = id_Product.name;
     const img = id_Product.img;
 
+    let hasInList = false;
+
+    userMarket.market.forEach((element) => {
+      if (element.idProduct === idProduct) {
+        hasInList = true;
+      }
+    });
+
+    if (hasInList) {
+      res.status(409).send({ message: "Esse produto já está na sua lista" });
+      return;
+    }
+
     if (!userMarket) {
       await db.collection(`${COLLECTIONS.MARKET}`).insertOne({
         userId: `${activeSession.userId}`,
