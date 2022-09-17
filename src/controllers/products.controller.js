@@ -1,8 +1,6 @@
 import db from "../database/db.js";
 import { ObjectId } from "mongodb";
-
 import { COLLECTIONS } from "../enums/collections.js";
-
 import { productSchema } from "../schemas/productSchema.js";
 
 async function getAllProducts(req, res) {
