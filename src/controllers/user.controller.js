@@ -38,14 +38,14 @@ async function signUp(req, res) {
 async function signIn(req, res) {
   const { email, password } = req.body;
 
-  const isValid = signInSchema.validate({
-    email,
-    password,
-  });
+  const isValid = signInSchema.validate(req.body, { aboutEarly: false });
 
   if (isValid.error) {
-    return res.send(STATUS_CODE.BAD_REQUEST);
+    const error = isValid.error.details.map((error) => error.message);
+    res.status(STATUS_CODE.BAD_REQUEST).send(error);
+    return;
   }
+
   try {
     const user = await db.collection(COLLECTIONS.USERS).findOne({
       email,
@@ -66,8 +66,6 @@ async function signIn(req, res) {
     });
 
     delete user.password;
-
-    console.log(user);
 
     return res.send(token);
   } catch (error) {

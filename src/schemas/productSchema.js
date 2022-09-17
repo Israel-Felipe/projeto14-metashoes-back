@@ -1,5 +1,12 @@
 import Joi from "joi";
 
+const registerProductSchema = Joi.object({
+  name: Joi.string().required(),
+  img: Joi.string().required(),
+  price: Joi.number().required(),
+  description: Joi.string().required(),
+});
+
 const productSchema = Joi.object({
   idProduct: Joi.string().required(),
   name: Joi.string().required(),
@@ -14,4 +21,4 @@ const productSchema = Joi.object({
   quantity: Joi.number().required(),
 });
 
-export { productSchema };
+export { productSchema, registerProductSchema };
