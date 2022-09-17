@@ -44,6 +44,11 @@ async function deleteProduct(req, res) {
     if (await db.collection(COLLECTIONS.PRODUCTS).findOne({ name })) {
       db.collection(COLLECTIONS.PRODUCTS).deleteOne({ name });
       res.send({ message: "Produto deletado com sucesso" });
+      return;
+    } else {
+      res
+        .status(STATUS_CODE.BAD_REQUEST)
+        .send({ message: "Insira o nome corretamente" });
     }
   } catch (error) {
     console.log(error);
