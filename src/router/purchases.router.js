@@ -4,6 +4,6 @@ import { checkAuthorization } from "../middlewares/auth.middlewares";
 
 const router = express.Router();
 
-router.post("/purchases", checkAuthorization, createPurchase);
+router.post("/pagamento", checkAuthorization, createPurchase);
 
 export default router;
