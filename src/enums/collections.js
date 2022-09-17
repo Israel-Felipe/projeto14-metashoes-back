@@ -1,7 +1,9 @@
 const COLLECTIONS = Object.freeze({
   META_SHOES: "metaShoes",
   USERS: "users",
-  SESSIONS: "sessions",
+  SESSIONS: "sessions", 
+  MARKET: "market", 
+  PURCHASES: "purchases"
 });
 
 export { COLLECTIONS };
