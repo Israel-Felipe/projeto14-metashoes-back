@@ -179,10 +179,10 @@ async function getItemsFromCar(req, res) {
     });
 
     if (!userMarket) {
-      res
-        .status(404)
-        .send({ message: "Não foi possível achar o seu carrinho" });
-      return;
+      await db.collection(`${COLLECTIONS.MARKET}`).insertOne({
+        userId: `${activeSession.userId}`,
+        market: [],
+      });
     }
 
     res.send(userMarket.market);
