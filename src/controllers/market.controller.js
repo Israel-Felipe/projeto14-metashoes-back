@@ -183,6 +183,15 @@ async function getItemsFromCar(req, res) {
         userId: `${activeSession.userId}`,
         market: [],
       });
+
+      const userMarketCreate = await db
+        .collection(`${COLLECTIONS.MARKET}`)
+        .findOne({
+          userId: activeSession.userId.toHexString(),
+        });
+
+      res.send(userMarketCreate.market);
+      return;
     }
 
     res.send(userMarket.market);
