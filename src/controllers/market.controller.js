@@ -34,7 +34,7 @@ async function addToCar(req, res) {
     }
 
     const userMarket = await db.collection(`${COLLECTIONS.MARKET}`).findOne({
-      userId: activeSession.userId,
+      userId: activeSession.userId.toHexString(),
     });
 
     const id_Product = await db.collection(`${COLLECTIONS.PRODUCTS}`).findOne({
@@ -124,7 +124,7 @@ async function removeFromCar(req, res) {
       return;
     }
     const userMarket = await db.collection(`${COLLECTIONS.MARKET}`).findOne({
-      userId: activeSession.userId,
+      userId: activeSession.userId.toHexString(),
     });
 
     if (!userMarket) {
