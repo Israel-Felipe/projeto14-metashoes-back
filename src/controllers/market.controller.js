@@ -175,7 +175,7 @@ async function getItemsFromCar(req, res) {
     }
 
     const userMarket = await db.collection(`${COLLECTIONS.MARKET}`).findOne({
-      userId: ObjectId(activeSession.userId),
+      userId: activeSession.userId.toHexString(),
     });
 
     if (!userMarket) {
