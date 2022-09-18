@@ -175,7 +175,7 @@ async function getItemsFromCar(req, res) {
     }
 
     const userMarket = await db.collection(`${COLLECTIONS.MARKET}`).findOne({
-      userId: activeSession.userId,
+      userId: ObjectId(activeSession.userId),
     });
 
     if (!userMarket) {
@@ -186,6 +186,7 @@ async function getItemsFromCar(req, res) {
     }
 
     res.send(userMarket.market);
+    return;
   } catch (error) {
     res
       .status(500)
