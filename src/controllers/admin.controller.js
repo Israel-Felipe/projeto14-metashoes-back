@@ -38,7 +38,7 @@ async function registerProduct(req, res) {
 }
 
 async function deleteProduct(req, res) {
-  const { name } = req.body;
+  const { name } = req.params;
 
   try {
     if (await db.collection(COLLECTIONS.PRODUCTS).findOne({ name })) {
