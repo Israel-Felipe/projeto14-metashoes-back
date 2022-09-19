@@ -9,7 +9,6 @@ const registerProductSchema = Joi.object({
 
 const productSchema = Joi.object({
   idProduct: Joi.string().required(),
-  name: Joi.string().required(),
   size: Joi.number().required(),
   color: Joi.string()
     .required()
