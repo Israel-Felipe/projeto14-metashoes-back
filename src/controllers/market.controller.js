@@ -33,9 +33,19 @@ async function addToCar(req, res) {
       return;
     }
 
-    const userMarket = await db.collection(`${COLLECTIONS.MARKET}`).findOne({
+    let userMarket = await db.collection(`${COLLECTIONS.MARKET}`).findOne({
       userId: activeSession.userId.toHexString(),
     });
+
+    if (!userMarket) {
+      await db.collection(`${COLLECTIONS.MARKET}`).insertOne({
+        userId: `${activeSession.userId}`,
+        market: [],
+      });
+      userMarket = await db.collection(`${COLLECTIONS.MARKET}`).findOne({
+        userId: activeSession.userId.toHexString(),
+      });
+    }
 
     const id_Product = await db.collection(`${COLLECTIONS.PRODUCTS}`).findOne({
       _id: ObjectId(idProduct),
@@ -86,8 +96,6 @@ async function addToCar(req, res) {
         }
       );
     }
-
-    //fazer uma verificação pra ver se tem carrinho. (NÃO SEI SE CRIA NO LOGIN OU AQUI)
 
     res.status(201).send({ message: "Item adicionado ao carrinho" });
   } catch (error) {
