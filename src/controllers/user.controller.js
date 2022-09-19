@@ -67,8 +67,6 @@ async function signIn(req, res) {
 
     delete user.password;
 
-    console.log(user);
-
     return res.send({ token, user });
   } catch (error) {
     console.log(error);
