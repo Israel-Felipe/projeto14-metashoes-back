@@ -67,7 +67,7 @@ async function signIn(req, res) {
 
     delete user.password;
 
-    return res.send(token);
+    return res.send({ token, user });
   } catch (error) {
     console.log(error);
     return res.send(STATUS_CODE.SERVER_ERROR);
