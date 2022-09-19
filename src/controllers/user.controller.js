@@ -69,7 +69,7 @@ async function signIn(req, res) {
 
     console.log(user);
 
-    return res.send(token);
+    return res.send({ token, user });
   } catch (error) {
     console.log(error);
     return res.send(STATUS_CODE.SERVER_ERROR);
